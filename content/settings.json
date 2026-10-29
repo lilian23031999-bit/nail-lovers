@@ -1,0 +1,61 @@
+{
+  "site_title": "Nail Lovers by Tiana",
+  "site_url": "https://naillovers.netlify.app",
+  "seo_description": "Luxury nail artistry and lash extensions in Lagos by Tiana. Acrylic nails, nail art, gel manicures, lash extensions and bridal packages. Book your appointment today.",
+  "seo_keywords": "nail tech Lagos, acrylic nails Lagos, lash extensions Lagos, gel manicure, bridal nails, Nail Lovers by Tiana",
+  "brand_main": "NAIL LOVERS",
+  "brand_script": "by Tiana",
+  "hero_tag": "Nail Tech in Lagos",
+  "hero_title": "Where Nails",
+  "hero_accent": "Become Art",
+  "hero_text": "Luxury nail artistry & lash extensions crafted with precision, passion and flair. Because every detail deserves to be flawless.",
+  "hero_image": "/WORK_SAMPLE_1.jpg",
+  "hero_image_alt": "Red stiletto nails by Tiana",
+  "stats": [
+    {
+      "num": "500+",
+      "label": "Happy Clients"
+    },
+    {
+      "num": "5★",
+      "label": "Rated Service"
+    }
+  ],
+  "about_image": "/TIANA_PICTURE.jpg",
+  "about_image_alt": "Tiana, founder of Nail Lovers",
+  "about_badge_title": "Founder & CEO",
+  "about_badge_name": "Tiana",
+  "about_tag": "CEO Spotlight",
+  "about_title": "Meet Tiana",
+  "about_bio": "Behind every flawless set of nails is a vision — and that vision belongs to Tiana, the founder and creative force behind **Nail Lovers by Tiana**. With years of hands-on experience and an obsessive eye for detail, Tiana has built a reputation as one of Lagos' most sought-after nail and lash technicians.\n\nFrom bold stiletto acrylics to delicate French tips and stunning lash extensions, Tiana approaches every client as a canvas. Her work blends technique with artistry — always pushing creative boundaries while maintaining the highest standard of quality and hygiene.",
+  "about_quote": "Your nails are a reflection of who you are. I make sure they speak beautifully.",
+  "whatsapp": "2348141598053",
+  "phone": "08141598053",
+  "email": "Christianauzordinma1998@gmail.com",
+  "instagram_url": "https://www.instagram.com/nails_lovers39/",
+  "instagram_handle": "@nails_lovers39",
+  "location": "Lagos, Nigeria",
+  "booking_services": [
+    "Acrylic Full Set",
+    "Nail Art & Design",
+    "Gel Manicure",
+    "Lash Extensions",
+    "Nail Infill",
+    "Nail Removal",
+    "Bridal Package"
+  ],
+  "time_slots": [
+    "9:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "12:00 PM",
+    "1:00 PM",
+    "2:00 PM",
+    "3:00 PM",
+    "4:00 PM",
+    "5:00 PM"
+  ],
+  "booking_note": "We will confirm your booking via WhatsApp within 24 hours",
+  "form_email_note": "Prefer email? Write to us any time.",
+  "google_verification": ""
+}
