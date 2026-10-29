@@ -1,0 +1,9 @@
+{ "items": [
+  { "question": "How do I book an appointment?", "answer": "Fill in the booking form on this page and it opens WhatsApp with your details ready to send. Tiana will confirm your slot within 24 hours." },
+  { "question": "Where are you located?", "answer": "Nail Lovers by Tiana is based in Lagos, Nigeria. Message us on WhatsApp for the exact address and directions once you book." },
+  { "question": "Which services do you offer?", "answer": "Acrylic full sets, custom nail art and design, gel manicures, classic, hybrid and volume lash extensions, nail infill and removal, and complete bridal packages." },
+  { "question": "Can I bring a design inspiration?", "answer": "Yes. Send your inspiration pictures on WhatsApp or bring them to your appointment and Tiana will recreate or adapt them for you." },
+  { "question": "How long do nails and lashes last?", "answer": "Gel manicures stay beautiful for weeks, and clients regularly enjoy their lash sets for around three weeks with proper care. Infills keep acrylics fresh between sets." },
+  { "question": "Do you offer bridal packages?", "answer": "Yes. The bridal package includes a consultation, a trial session and the day of application for both nails and lashes." },
+  { "question": "How do I get prices?", "answer": "Prices are listed on each service where available. For custom designs or packages, message us on WhatsApp for a quote." }
+] }
