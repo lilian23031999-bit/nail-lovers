@@ -1,8 +1,0 @@
-{
-  "banner_enabled": false,
-  "banner_text": "New client? Ask about our special offer!",
-  "banner_link": "#booking",
-  "items": [
-    { "active": false, "title": "Sample Promotion", "description": "Edit this in the dashboard, tick Active and it appears on your site.", "badge": "10% OFF", "code": "", "expires": "" }
-  ]
-}
