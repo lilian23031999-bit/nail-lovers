@@ -1,8 +1,40 @@
-{ "items": [
-  { "icon": "💅", "name": "Acrylic Nails", "description": "Full set acrylics sculpted to perfection. Choose from stiletto, coffin, almond or square shapes in bold colours, solids and custom nail art.", "price": "" },
-  { "icon": "✨", "name": "Nail Art & Design", "description": "Custom hand painted nail art including animal prints, French tips, chrome, 3D designs and rhinestones. Bring your vision to life.", "price": "" },
-  { "icon": "🌸", "name": "Gel Manicure", "description": "Long lasting gel polish with a flawless finish. Chip resistant and beautiful for weeks with natural and overlay options available.", "price": "" },
-  { "icon": "👁️", "name": "Lash Extensions", "description": "Classic, hybrid and volume lash extensions applied with professional precision. Wake up looking glamorous every single morning.", "price": "" },
-  { "icon": "🔄", "name": "Nail Infill & Removal", "description": "Safe and professional infill and soak off removal services to keep your nails healthy and looking their very best.", "price": "" },
-  { "icon": "👸", "name": "Bridal Package", "description": "Complete bridal nail and lash package for your special day. Includes consultation, trial session and day of application.", "price": "" }
-] }
+{
+  "items": [
+    {
+      "icon": "💅",
+      "name": "Acrylic Nails",
+      "description": "Full set acrylics sculpted to perfection. Choose from stiletto, coffin, almond or square shapes in bold colours, solids and custom nail art.",
+      "price": ""
+    },
+    {
+      "icon": "✨",
+      "name": "Nail Art & Design",
+      "description": "Custom hand painted nail art including animal prints, French tips, chrome, 3D designs and rhinestones. Bring your vision to life.",
+      "price": ""
+    },
+    {
+      "icon": "🌸",
+      "name": "Gel Manicure",
+      "description": "Long lasting gel polish with a flawless finish. Chip resistant and beautiful for weeks with natural and overlay options available.",
+      "price": ""
+    },
+    {
+      "icon": "👁️",
+      "name": "Lash Extensions",
+      "description": "Classic, hybrid and volume lash extensions applied with professional precision. Wake up looking glamorous every single morning.",
+      "price": ""
+    },
+    {
+      "icon": "🔄",
+      "name": "Nail Infill & Removal",
+      "description": "Safe and professional infill and soak off removal services to keep your nails healthy and looking their very best.",
+      "price": "#3000"
+    },
+    {
+      "icon": "👸",
+      "name": "Bridal Package",
+      "description": "Complete bridal nail and lash package for your special day. Includes consultation, trial session and day of application.",
+      "price": ""
+    }
+  ]
+}
