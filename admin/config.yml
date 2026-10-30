@@ -114,7 +114,7 @@ collections:
           - { label: Badge name, name: about_badge_name, widget: string }
           - { label: About small tag, name: about_tag, widget: string }
           - { label: About title, name: about_title, widget: string }
-          - { label: About bio (blank line = new paragraph, **bold**), name: about_bio, widget: text }
+          - { label: "About bio (blank line starts a new paragraph, put two stars around words for bold)", name: about_bio, widget: text }
           - { label: Quote, name: about_quote, widget: text }
           - { label: WhatsApp number (international, no +), name: whatsapp, widget: string }
           - { label: Phone shown on site, name: phone, widget: string }
