@@ -122,6 +122,9 @@ collections:
           - { label: Instagram link, name: instagram_url, widget: string }
           - { label: Instagram handle, name: instagram_handle, widget: string }
           - { label: Location, name: location, widget: string }
+          - { label: "Street address shown on the website (leave empty to hide)", name: address, widget: string, required: false }
+          - { label: "Opening hours (one line per day)", name: hours, widget: text, required: false }
+          - { label: "Google Maps link for the Get Directions button (optional)", name: map_url, widget: string, required: false }
           - { label: Booking form services, name: booking_services, widget: list, field: { label: Service, name: service, widget: string } }
           - { label: Booking time slots, name: time_slots, widget: list, field: { label: Time, name: time, widget: string } }
           - { label: Booking note, name: booking_note, widget: string }
