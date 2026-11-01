@@ -291,4 +291,23 @@
     };
     qStart();
   }
+
+  // in-page video player (Google Drive or YouTube links)
+  var vb = $('#videoBtn'), vm = $('#vmodal'), vf = $('#vFrame');
+  function embedUrl(u) {
+    var m;
+    if ((m = u.match(/drive\.google\.com\/file\/d\/([\w-]+)/) || u.match(/drive\.google\.com\/.*[?&]id=([\w-]+)/))) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
+    if ((m = u.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/))) return 'https://www.youtube-nocookie.com/embed/' + m[1] + '?autoplay=1&rel=0';
+    return '';
+  }
+  if (vb && vm && vf) {
+    var closeVideo = function () { vm.classList.remove('open'); vf.src = 'about:blank'; document.body.style.overflow = ''; vb.focus(); };
+    vb.addEventListener('click', function (e) {
+      var src = embedUrl(vb.href); if (!src) return;
+      e.preventDefault(); vf.src = src; $('#vOpen').href = vb.href; vm.classList.add('open'); document.body.style.overflow = 'hidden'; $('#vClose').focus();
+    });
+    $('#vClose').onclick = closeVideo;
+    vm.addEventListener('click', function (e) { if (e.target === vm) closeVideo(); });
+    addEventListener('keydown', function (e) { if (e.key === 'Escape' && vm.classList.contains('open')) closeVideo(); });
+  }
 })();
