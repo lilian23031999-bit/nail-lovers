@@ -13,6 +13,10 @@ const today = new Date().toISOString().slice(0, 10);
 const promos = (PR.items || []).filter(p => p.active && (!p.expires || p.expires.slice(0, 10) >= today));
 const url = (S.site_url || '').replace(/\/$/, '');
 const wa = (t = '') => `https://wa.me/${S.whatsapp}${t ? '?text=' + encodeURIComponent(t) : ''}`;
+const cnt = n => { const m = String(n).match(/^(\D*)(\d+)(.*)$/); return m ? ` data-pre="${esc(m[1])}" data-count="${m[2]}" data-suf="${esc(m[3])}"` : ''; };
+const mapUrl = S.map_url || (S.address ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(S.address) : '');
+const sparks = [[8,70,0,.9],[16,22,2,.6],[28,82,1,.8],[40,14,3,.7],[52,60,.5,1],[64,30,2.5,.6],[74,76,1.5,.8],[86,40,3.5,.7]].map(([x, y, d, s]) => `<span class="spark" style="left:${x}%;top:${y}%;--d:${d}s;--s:${s}">✦</span>`).join('');
+const tickHalf = SV.map(s => `<span>${esc(s.name)}</span><i>✦</i>`).join('');
 const nav = [['services','Services'],['gallery','Gallery'],['about','About'],['faq','FAQ']];
 if (promos.length) nav.splice(1, 0, ['offers', 'Offers']);
 const navAll = [...nav, ['booking','Book Appointment'], ['contact','Contact']];
@@ -25,6 +29,7 @@ const ld = {
   makesOffer: SV.map(s => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s.name, description: s.description } }))
 };
 
+if (S.address) ld.address.streetAddress = S.address;
 const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,12 +47,14 @@ ${S.google_verification ? `<meta name="google-site-verification" content="${esc(
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');setTimeout(function(){if(!window.__rv)document.documentElement.classList.remove('js')},3500)</script>
 <link rel="stylesheet" href="styles.css">
 <script type="application/ld+json">${JSON.stringify(ld)}</script>
 <script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'FAQPage',mainEntity:FAQ.map(q=>({'@type':'Question',name:q.question,acceptedAnswer:{'@type':'Answer',text:q.answer}}))})}</script>
 </head>
 <body>
 <div class="cursor"></div><div class="cursor-ring"></div>
+<div class="progress" id="progress"></div>
 ${PR.banner_enabled && PR.banner_text ? `<div class="promo-bar">${PR.banner_link ? `<a href="${esc(PR.banner_link)}">${esc(PR.banner_text)}</a>` : esc(PR.banner_text)}</div>` : ''}
 
 <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
@@ -66,16 +73,19 @@ ${PR.banner_enabled && PR.banner_text ? `<div class="promo-bar">${PR.banner_link
 </nav>
 
 <header class="hero">
-  <div class="hero-bg"></div><div class="hero-grid"></div>
+  <div class="hero-bg">${sparks}</div><div class="hero-grid"></div>
   <div class="hero-content">
     <div class="hero-tag">${esc(S.hero_tag)}</div>
     <h1>${esc(S.hero_title)} <span class="accent">${esc(S.hero_accent)}</span></h1>
     <p>${esc(S.hero_text)}</p>
     <div class="hero-btns"><a href="#booking" class="btn-primary">Book Appointment</a><a href="#gallery" class="btn-outline">View My Work</a></div>
+    <a href="#quiz" class="quiz-link">✨ Not sure what to get? Find your perfect set →</a>
   </div>
   <div class="hero-image ph">${img(S.hero_image, S.hero_image_alt, 'fetchpriority="high"').replace('loading="lazy"', '')}</div>
-  <div class="hero-stats">${S.stats.map(s => `<div class="stat"><span class="stat-num">${esc(s.num)}</span><span class="stat-label">${esc(s.label)}</span></div>`).join('')}</div>
+  <div class="hero-stats">${S.stats.map(s => `<div class="stat"><span class="stat-num"${cnt(s.num)}>${esc(s.num)}</span><span class="stat-label">${esc(s.label)}</span></div>`).join('')}</div>
 </header>
+
+<div class="ticker" aria-hidden="true"><div class="ticker-track">${tickHalf.repeat(4)}</div></div>
 
 <section class="services" id="services">
   <div class="section-header"><span class="section-tag">What We Offer</span><h2 class="section-title">Our <span class="accent">Services</span></h2><div class="section-divider"></div>
@@ -96,8 +106,14 @@ ${promos.length ? `<section class="offers" id="offers">
 <section class="gallery" id="gallery">
   <div class="section-header"><span class="section-tag">Our Work</span><h2 class="section-title">Our <span class="accent">Portfolio</span></h2><div class="section-divider"></div>
   <p class="section-sub">A glimpse of our nail artistry and lash work. Every client, a masterpiece.</p></div>
-  <div class="gallery-grid">${G.items.map(g => `<figure class="gallery-item ph">${img(g.image, g.alt)}<div class="gallery-overlay"><span class="gallery-label">${esc(g.label)}</span></div></figure>`).join('')}</div>
+  <div class="gallery-grid">${G.items.map(g => `<figure class="gallery-item ph" role="button" tabindex="0" aria-label="View photo: ${esc(g.alt)}" data-label="${esc(g.label)}">${img(g.image, g.alt)}<div class="gallery-overlay"><span class="gallery-label">${esc(g.label)}</span></div></figure>`).join('')}</div>
   ${G.video_url ? `<div class="gallery-video"><a class="btn-outline" href="${esc(G.video_url)}" target="_blank" rel="noopener">${esc(G.video_label)}</a></div>` : ''}
+</section>
+
+<section class="quiz" id="quiz">
+  <div class="section-header"><span class="section-tag">Find Your Style</span><h2 class="section-title">Find Your Perfect <span class="accent">Set</span></h2><div class="section-divider"></div>
+  <p class="section-sub">Answer a few quick questions and we will suggest the right service. Then send it straight to Tiana on WhatsApp.</p></div>
+  <div class="quiz-card" id="quizCard"><p class="quiz-fallback">Not sure what to get? <a href="#booking">Book an appointment</a> or <a href="${wa()}">message us on WhatsApp</a>.</p></div>
 </section>
 
 <div class="ceo-wrap" id="about"><section class="ceo">
@@ -137,6 +153,7 @@ ${promos.length ? `<section class="offers" id="offers">
 <section class="contact" id="contact">
   <div class="section-header" style="margin-bottom:40px"><h2 class="section-title">Get In <span class="accent">Touch</span></h2><div class="section-divider"></div></div>
   <ul class="contact-list"><li>📞 <a href="${wa()}">${esc(S.phone)}</a></li><li>✉️ <a href="mailto:${esc(S.email)}">${esc(S.email)}</a></li><li>📸 <a href="${esc(S.instagram_url)}" target="_blank" rel="noopener">${esc(S.instagram_handle)}</a></li><li>📍 ${esc(S.location)}</li></ul>
+  ${(S.address || S.hours) ? `<div class="visit">${S.address ? `<div class="visit-card"><h3>Visit Us</h3><p>${esc(S.address)}</p>${mapUrl ? `<a class="btn-primary" href="${esc(mapUrl)}" target="_blank" rel="noopener">Get Directions</a>` : ''}</div>` : ''}${S.hours ? `<div class="visit-card"><h3>Opening Hours</h3><p>${esc(S.hours)}</p></div>` : ''}</div>` : ''}
   <div class="booking-inner contact-form-wrap"><h3 class="contact-form-title">Send Us a Message</h3>
   <form id="contactForm" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate><input type="hidden" name="form-name" value="contact"><p hidden><label>Leave empty <input name="bot-field"></label></p>
   <div class="form-grid"><div class="form-group"><label for="c-name">Your Name</label><input id="c-name" name="name" required autocomplete="name"></div>
@@ -158,6 +175,8 @@ ${promos.length ? `<section class="offers" id="offers">
   <p class="copy">© ${new Date().getFullYear()} ${esc(S.site_title)}. All Rights Reserved.</p>
 </footer>
 
+<a class="sticky-book" id="stickyBook" href="#booking">📅 Book Appointment</a>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer"><button class="lb-btn lb-close" id="lbClose" aria-label="Close photo">✕</button><button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous photo">‹</button><img id="lbImg" alt=""><div class="lb-cap" id="lbCap"></div><button class="lb-btn lb-next" id="lbNext" aria-label="Next photo">›</button></div>
 <button class="chat-fab" id="chatFab" aria-label="Open chat" aria-expanded="false">💬</button>
 <div class="chat-panel" id="chatPanel" role="dialog" aria-label="Chat with ${esc(S.site_title)}">
   <div class="chat-head"><span class="chat-avatar">TN</span><span class="chat-title"><span class="chat-name">${esc(S.site_title)}</span><span class="chat-status"><i class="dot"></i>Always here to help</span></span><button class="chat-close" id="chatClose" aria-label="Close chat">✕</button></div>
