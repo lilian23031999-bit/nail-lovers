@@ -194,4 +194,101 @@
     if (missing(cform, ['name', 'email', 'message'])) return;
     save(cform).then(function () { toast('\u2713 Message sent! We will reply by email soon.'); cform.reset(); });
   });
+
+  // ===== motion and extras =====
+  var reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var bar = $('#progress'), ticking = false;
+  function prog() { if (!bar) { ticking = false; return; } var h = document.documentElement.scrollHeight - innerHeight; bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, scrollY / h) : 0) + ')'; ticking = false; }
+  addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(prog); } }, { passive: true }); prog();
+
+  var RV = '.section-header,.service-card,.offer-card,.gallery-item,.ceo-image-wrap,.ceo-content,.booking-inner,.faq-item,.testimonial-card,.contact-list,.visit-card,.follow>*,.quiz-card';
+  document.querySelectorAll(RV).forEach(function (el) {
+    var sibs = [].filter.call(el.parentNode.children, function (c) { return c.matches(RV); });
+    el.style.setProperty('--i', Math.min(sibs.indexOf(el), 5));
+  });
+  var ioOK = 'IntersectionObserver' in window && !reduce;
+  if (ioOK) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll(RV).forEach(function (el) { io.observe(el); });
+  } else document.querySelectorAll(RV).forEach(function (el) { el.classList.add('in'); });
+  window.__rv = true;
+
+  function countUp(el) {
+    var to = +el.dataset.count, pre = el.dataset.pre || '', suf = el.dataset.suf || '', t0 = null;
+    el.textContent = pre + '0' + suf;
+    requestAnimationFrame(function step(t) { if (!t0) t0 = t; var p = Math.min(1, (t - t0) / 1500); el.textContent = pre + Math.round(to * (1 - Math.pow(1 - p, 3))) + suf; if (p < 1) requestAnimationFrame(step); });
+  }
+  if (ioOK) {
+    var io2 = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { countUp(e.target); io2.unobserve(e.target); } }); }, { threshold: 0.6 });
+    document.querySelectorAll('.stat-num[data-count]').forEach(function (el) { io2.observe(el); });
+  }
+
+  var sb = $('#stickyBook'), bk = $('#booking'), bkIn = false;
+  function updSticky() { if (!sb) return; sb.classList.toggle('show', scrollY > 600 && !bkIn); }
+  if (bk && 'IntersectionObserver' in window) new IntersectionObserver(function (e) { bkIn = e[0].isIntersecting; updSticky(); }).observe(bk);
+  addEventListener('scroll', updSticky, { passive: true });
+
+  // photo viewer
+  var lb = $('#lightbox'), lbImg = $('#lbImg'), lbCap = $('#lbCap'), tiles = [].slice.call(document.querySelectorAll('.gallery-item')), cur = 0, lastFocus = null;
+  function showPhoto(i) { cur = (i + tiles.length) % tiles.length; var im = tiles[cur].querySelector('img'); if (!im) return; lbImg.src = im.currentSrc || im.src; lbImg.alt = im.alt; lbCap.textContent = tiles[cur].dataset.label || im.alt; }
+  function openLb(i) { if (!lb) return; lastFocus = document.activeElement; showPhoto(i); lb.classList.add('open'); document.body.style.overflow = 'hidden'; $('#lbClose').focus(); }
+  function closeLb() { lb.classList.remove('open'); document.body.style.overflow = ''; if (lastFocus) lastFocus.focus(); }
+  tiles.forEach(function (t, i) { t.onclick = function () { openLb(i); }; t.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(i); } }; });
+  if (lb) {
+  $('#lbClose').onclick = closeLb; $('#lbPrev').onclick = function () { showPhoto(cur - 1); }; $('#lbNext').onclick = function () { showPhoto(cur + 1); };
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+  }
+  addEventListener('keydown', function (e) { if (!lb || !lb.classList.contains('open')) return; if (e.key === 'Escape') closeLb(); if (e.key === 'ArrowLeft') showPhoto(cur - 1); if (e.key === 'ArrowRight') showPhoto(cur + 1); });
+  var sx = 0;
+  if (lb) {
+  lb.addEventListener('touchstart', function (e) { sx = e.changedTouches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', function (e) { var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) showPhoto(cur + (dx < 0 ? 1 : -1)); }, { passive: true });
+  }
+
+  // "Find your perfect set" quiz
+  var qz = $('#quizCard');
+  if (qz) {
+    var STEPS = {
+      nails: [{ k: 'Shape', q: 'Pick your shape', o: ['Almond', 'Stiletto', 'Coffin', 'Square'] }, { k: 'Length', q: 'How long do you want them?', o: ['Short', 'Medium', 'Long', 'Extra long'] }, { k: 'Vibe', q: 'What is your vibe?', o: ['Classy & neutral', 'Bold & colourful', 'Glam & bling', 'Art & prints'] }],
+      lashes: [{ k: 'Style', q: 'Pick a lash style', o: ['Classic', 'Hybrid', 'Volume'] }, { k: 'Look', q: 'What look are you going for?', o: ['Natural', 'Fluffy', 'Dramatic'] }],
+      bridal: [{ k: 'Timing', q: 'When is the big day?', o: ['Within a month', '1 to 3 months', '3+ months', 'Not sure yet'] }, { k: 'Needs', q: 'What do you need?', o: ['Nails', 'Lashes', 'Nails + Lashes'] }]
+    };
+    STEPS.both = [STEPS.nails[0], STEPS.nails[2], STEPS.lashes[1]];
+    var qPath = '', qAns = [];
+    var mk = function (tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+    var draw = function (node) { qz.innerHTML = ''; node.classList.add('quiz-step'); qz.appendChild(node); };
+    var dotsEl = function (n, i) { var d = mk('div', 'quiz-dots'); for (var j = 0; j < n; j++) d.appendChild(mk('i', j <= i ? 'on' : '')); return d; };
+    var qStart = function () {
+      qPath = ''; qAns = []; var w = mk('div'); w.appendChild(dotsEl(4, 0)); w.appendChild(mk('h3', 'quiz-q', 'What are you after today?'));
+      var g = mk('div', 'quiz-opts');
+      [['\uD83D\uDC85', 'Nails', 'nails'], ['\uD83D\uDC41\uFE0F', 'Lashes', 'lashes'], ['\u2728', 'Nails + Lashes', 'both'], ['\uD83D\uDC78', 'Bridal', 'bridal']].forEach(function (o) {
+        var b = mk('button', 'quiz-opt'); b.type = 'button'; b.appendChild(mk('b', '', o[0])); b.appendChild(document.createTextNode(o[1])); b.onclick = function () { qPath = o[2]; qStep(0); }; g.appendChild(b);
+      });
+      w.appendChild(g); draw(w);
+    };
+    var qStep = function (i) {
+      var list = STEPS[qPath]; if (i >= list.length) return qResult();
+      var w = mk('div'); w.appendChild(dotsEl(list.length + 1, i + 1)); w.appendChild(mk('h3', 'quiz-q', list[i].q));
+      var g = mk('div', 'quiz-opts');
+      list[i].o.forEach(function (o) { var b = mk('button', 'quiz-opt', o); b.type = 'button'; b.onclick = function () { qAns[i] = [list[i].k, o]; qStep(i + 1); }; g.appendChild(b); });
+      w.appendChild(g);
+      var back = mk('button', 'quiz-back', '\u2190 Back'); back.type = 'button'; back.onclick = function () { if (i === 0) qStart(); else qStep(i - 1); }; w.appendChild(back); draw(w);
+    };
+    var qResult = function () {
+      var a = {}; qAns.forEach(function (x) { a[x[0]] = x[1]; });
+      var name = qPath === 'lashes' ? 'Lash Extensions' : qPath === 'bridal' ? 'Bridal Package' : qPath === 'both' ? 'Acrylic Nails + Lash Extensions' : /art/i.test(a.Vibe || '') ? 'Nail Art & Design' : 'Acrylic Nails';
+      var svc = qPath === 'both' ? null : (D.services.filter(function (s) { return s.name.toLowerCase() === name.toLowerCase(); })[0] || D.services.filter(function (s) { return s.name.toLowerCase().indexOf(name.toLowerCase().split(' ')[0]) > -1; })[0]);
+      var w = mk('div', 'quiz-result'); w.appendChild(mk('h3', '', 'Your perfect set \u2728'));
+      var chips = mk('div', 'quiz-chips'); qAns.forEach(function (x) { chips.appendChild(mk('span', '', x[0] + ': ' + x[1])); }); w.appendChild(chips);
+      var rec = mk('div', 'quiz-rec'); rec.appendChild(mk('strong', '', name));
+      rec.appendChild(document.createTextNode(svc ? svc.desc + (svc.price ? ' Price: ' + svc.price + '.' : '') : 'Tiana will talk you through the best combination for you.')); w.appendChild(rec);
+      var msg = 'Hi Tiana! \uD83D\uDC85 I took the Find Your Set quiz on your website.\n\nI am interested in: ' + name + '\n' + qAns.map(function (x) { return x[0] + ': ' + x[1]; }).join('\n') + '\n\nCan I book?';
+      var act = mk('div', 'quiz-actions');
+      var wa1 = mk('a', 'btn-primary', 'Send to Tiana on WhatsApp'); wa1.href = 'https://wa.me/' + D.wa + '?text=' + encodeURIComponent(msg); wa1.target = '_blank'; wa1.rel = 'noopener';
+      var bk1 = mk('a', 'btn-outline', 'Book on the form'); bk1.href = '#booking';
+      act.appendChild(wa1); act.appendChild(bk1); w.appendChild(act);
+      var again = mk('button', 'quiz-back', 'Start again'); again.type = 'button'; again.onclick = qStart; w.appendChild(again); draw(w);
+    };
+    qStart();
+  }
 })();
