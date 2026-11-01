@@ -107,7 +107,7 @@ ${promos.length ? `<section class="offers" id="offers">
   <div class="section-header"><span class="section-tag">Our Work</span><h2 class="section-title">Our <span class="accent">Portfolio</span></h2><div class="section-divider"></div>
   <p class="section-sub">A glimpse of our nail artistry and lash work. Every client, a masterpiece.</p></div>
   <div class="gallery-grid">${G.items.map(g => `<figure class="gallery-item ph" role="button" tabindex="0" aria-label="View photo: ${esc(g.alt)}" data-label="${esc(g.label)}">${img(g.image, g.alt)}<div class="gallery-overlay"><span class="gallery-label">${esc(g.label)}</span></div></figure>`).join('')}</div>
-  ${G.video_url ? `<div class="gallery-video"><a class="btn-outline" href="${esc(G.video_url)}" target="_blank" rel="noopener">${esc(G.video_label)}</a></div>` : ''}
+  ${G.video_url ? `<div class="gallery-video"><a class="btn-outline" id="videoBtn" href="${esc(G.video_url)}" target="_blank" rel="noopener">${esc(G.video_label)}</a></div>` : ''}
 </section>
 
 <section class="quiz" id="quiz">
@@ -175,6 +175,7 @@ ${promos.length ? `<section class="offers" id="offers">
   <p class="copy">© ${new Date().getFullYear()} ${esc(S.site_title)}. All Rights Reserved.</p>
 </footer>
 
+<div class="vmodal" id="vmodal" role="dialog" aria-modal="true" aria-label="Video player"><button class="lb-btn lb-close" id="vClose" aria-label="Close video">✕</button><div class="vbox"><iframe id="vFrame" title="Video player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div><a class="vfallback" id="vOpen" href="#" target="_blank" rel="noopener">Having trouble? Open the video in a new tab ↗</a></div>
 <a class="sticky-book" id="stickyBook" href="#booking">📅 Book Appointment</a>
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer"><button class="lb-btn lb-close" id="lbClose" aria-label="Close photo">✕</button><button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous photo">‹</button><img id="lbImg" alt=""><div class="lb-cap" id="lbCap"></div><button class="lb-btn lb-next" id="lbNext" aria-label="Next photo">›</button></div>
 <button class="chat-fab" id="chatFab" aria-label="Open chat" aria-expanded="false">💬</button>
